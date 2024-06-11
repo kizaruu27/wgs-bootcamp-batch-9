@@ -7,14 +7,12 @@ rl.question('Masukkan nama anda: ', nama => {
     rl.question('Masukkan nomor HP anda: ', noHP => {
         if (!validator.isMobilePhone(noHP, 'id-ID')) {
             console.log('Format nomor telpon salah, silahkan isi nomor telpon dengan format yang sesuai!');
-            rl.close();
-            return false;
+            return closeProgram();
         }
         rl.question('Masukkan email anda: ', email => {
             if (!validator.isEmail(email)) {
                 console.log('Format email salah, silahkan isi email dengan format yang sesuai');
-                rl.close();
-                return false;
+                return closeProgram();
             }
 
             console.log(greet(nama, noHP, email));
@@ -22,3 +20,8 @@ rl.question('Masukkan nama anda: ', nama => {
         });
     });
 });
+
+const closeProgram = () => {
+    rl.close();
+    return false;
+}
