@@ -14,21 +14,31 @@ const loadContacts = () => {
     return data;
 }
 
-
 const saveContact = (nama, noHP, email) => {
     if (!validator.isMobilePhone(noHP, 'id-ID')) {
         console.log('Format nomor telpon salah');
         return false;
     }
 
-    if (!validator.isEmail(email)) {
+    if (email && !validator.isEmail(email)) {
         console.log('Format email salah!');
         return false;
     }
 
     const contacts = loadContacts();
+
+    const id = () => {
+        let idTmp = contacts.length + 1;
+        contacts.forEach(contact => {
+            if (idTmp === contact.id) {
+                idTmp += 1;
+            }
+        });
+        return idTmp;
+    }
+
     const data = {
-        id: contacts.length,
+        id: id(),
         nama, 
         noHP, 
         email
@@ -67,6 +77,12 @@ const showDetail = (id) => {
 const deleteContact = (id) => {
     const contacts = loadContacts();
     const newContact = contacts.filter(contact => contact.id !== id);
+    const targetContact = contacts.find(contact => contact.id === id);
+
+    if (!targetContact) {
+        console.log('ID tidak ditemukan');
+        return false;
+    }
 
     fs.writeFileSync(path, JSON.stringify(newContact, null, 2));
     console.log('Data berhasil dihapus');
@@ -74,17 +90,31 @@ const deleteContact = (id) => {
 
 const updateContactData = (id, newName, newPhone, newEmail) => {
     const contacts = loadContacts();
-    
-    contacts.forEach(contact => {
+    const targetContacts = contacts.find(contact => contact.id === id);
+
+    if (!targetContacts) {
+        console.log('ID tidak ditemukan!');
+        return false;
+    }
+
+    contacts.map(contact => {
         if (contact.id === id) {
             if (newName) contact.nama = newName;
             if (newPhone) contact.noHP = newPhone;
             if (newEmail) contact.email = newEmail;
-        }
+        } 
     })
 
     fs.writeFileSync(path, JSON.stringify(contacts, null, 2));
     console.log('Data berhasil di update!');
 }
 
-module.exports = {saveContact, showContact, showDetail, deleteContact, updateContactData}
+const deleteAllContact = () => {
+    const contacts = loadContacts();
+    contacts.length = 0;
+    fs.writeFileSync(path, JSON.stringify(contacts, null, 2));
+
+    console.log('Semua contact telah dihapus');
+}
+
+module.exports = {saveContact, showContact, showDetail, deleteContact, updateContactData, deleteAllContact}

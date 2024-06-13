@@ -1,4 +1,4 @@
-const {saveContact, showContact, showDetail, deleteContact, updateContactData} = require('./contacts');
+const {saveContact, showContact, showDetail, deleteContact, updateContactData, deleteAllContact} = require('./contacts');
 const yargs = require('yargs');
 
 const main = () => {
@@ -62,6 +62,14 @@ const main = () => {
         },
         handler(argv) {
             deleteContact(argv.id);
+        }
+    });
+
+    yargs.command({
+        command: 'delete-all',
+        describe: 'Delete all contact data',
+        handler() {
+            deleteAllContact();
         }
     });
 
