@@ -93,6 +93,20 @@ const updateContactData = (id, newName, newPhone, newEmail) => {
         return false;
     }
 
+    if (newPhone) {
+        if (!validator.isMobilePhone(newPhone, 'id-ID')) {
+            console.log('Format penulisan nomor salah!');
+            return false;
+        }
+    }
+
+    if (newEmail) {
+        if (!validator.isEmail(newEmail)) {
+            console.log('Format penulisan email salah!');
+            return false;
+        }
+    }
+
     contacts.map(contact => {
         if (contact.id === id) {
             if (newName) contact.nama = newName;
