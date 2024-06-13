@@ -30,9 +30,7 @@ const saveContact = (nama, noHP, email) => {
     const id = () => {
         let idTmp = contacts.length + 1;
         contacts.forEach(contact => {
-            if (idTmp === contact.id) {
-                idTmp += 1;
-            }
+            if (idTmp === contact.id) idTmp += 1;
         });
         return idTmp;
     }
@@ -54,7 +52,6 @@ const showContact = () => {
     contacts.forEach((contact, key) => {
         console.log(`${key + 1}: `);
         console.log(`Nama: ${contact.nama}`);
-        console.log(`Email: ${contact.email}`);
         console.log(`No Hp: ${contact.noHP}\n`);
     })
 }
@@ -70,7 +67,6 @@ const showDetail = (id) => {
 
     console.log(`Nama: ${contact.nama}`);
     console.log(`No HP: ${contact.noHP}`);
-
     if (contact.email) console.log(`Email: ${contact.email}`);
 }
 
