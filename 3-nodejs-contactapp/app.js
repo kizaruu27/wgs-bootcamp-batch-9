@@ -1,25 +1,7 @@
-const contacts = require('./contacts');
-const dir = require('./dir');
+const {saveContact, showContact, showDetail, deleteContact, updateContactData} = require('./contacts');
 const yargs = require('yargs');
-const fs = require('fs');
-const rl = require('readline').createInterface(process.stdin, process.stdout);
-
-dir.checkDir();
-
-const file = fs.readFileSync(dir.path, 'utf-8');
-const data = JSON.parse(file);
-
-function writeFileToJSON(data) {
-    fs.writeFileSync(dir.path, JSON.stringify(data, null, 2));
-}
-
-module.exports = {data};
 
 const main = () => {
-    // const nama = await contacts.question('Masukkan nama anda: ');
-    // const noHP = await contacts.question('Masukkan no HP anda: ');
-    // const email = await contacts.question('Masukkan email anda: ');
-
     yargs.command({
         command: 'add',
         describe: 'Add new contact',
@@ -41,30 +23,20 @@ const main = () => {
             }
         },
         handler(argv) {
-            const contact = {
-                name: argv.name,
-                email: argv.email,
-                mobile: argv.mobile
-            }
-    
-            console.log(contact);
-            const id = data.length;
-            contacts.saveContact(id, contact.name, contact.mobile, contact.email, dir.path);
-            console.log('Data telah diterima!');
+            saveContact(argv.name,argv.mobile, argv.email);
         }
-    });
+    }).demandCommand();
 
     yargs.command({
-        command: 'read',
-        describe: 'Read contact data',
+        command: 'list',
+        describe: 'Show contact data',
         handler() {
-            console.log(data);
-            rl.close();
+            showContact();
         }
     });
 
     yargs.command({
-        command: 'read-detail',
+        command: 'detail',
         describe:'Read the detail of certain data',
         builder: {
             id: {
@@ -74,11 +46,7 @@ const main = () => {
             }
         },
         handler(argv) {
-            for (let contact of data) {
-                if (contact.id === argv.id) console.log(contact);
-            }
-
-            rl.close();
+            showDetail(argv.id);
         }
     })
 
@@ -93,10 +61,7 @@ const main = () => {
             }
         },
         handler(argv) {
-            const newData = data.filter(item => item.id !== argv.id);
-            writeFileToJSON(newData);
-            console.log(newData);
-            rl.close();
+            deleteContact(argv.id);
         }
     });
 
@@ -126,16 +91,7 @@ const main = () => {
             }
         },
         handler(argv) {
-            for (let contact of data) {
-                if (contact.id === argv.id) {
-                    if (argv.newName) contact.nama = argv.newName;
-                    if (argv.newPhone) contact.noHP = argv.newPhone;
-                    if (argv.newEmail) contact.email = argv.newEmail;
-                } 
-            }
-            writeFileToJSON(data);
-            console.log(data);
-            rl.close();
+            updateContactData(argv.id, argv.newName, argv.newPhone, argv.newEmail);
         }
     });
     
