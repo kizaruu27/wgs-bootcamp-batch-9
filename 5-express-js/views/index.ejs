@@ -1,0 +1,13 @@
+<h1>Selamat Datang, <%= nama %></h1>
+        <h3>Daftar Nama: </h3>
+        <ul>
+            <% contacts.forEach((contact, key) => { %>
+                <li>
+                    <div class="py-2">
+                        <p><%= key + 1 %>.</p>
+                        <p>Nama: <b><%= contact.nama %></b></p>
+                        <p>No. Telpon: <b><%= contact.noHP %></b></p>
+                    </div>
+                </li>
+            <% }) %>
+        </ul>
