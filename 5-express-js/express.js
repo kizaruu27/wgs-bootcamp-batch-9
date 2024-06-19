@@ -1,6 +1,6 @@
-const fs = require('fs');
 const express = require('express');
 const expressLayout = require('express-ejs-layouts');
+const { loadContacts } = require('./utils/contact')
 const app = express();
 const port = 3000;
 
@@ -8,8 +8,7 @@ app.set('view engine', 'ejs');
 app.use(expressLayout);
 
 app.get('/', (req, res) => {
-    const file = fs.readFileSync('./data.json', 'utf-8');
-    const contacts = JSON.parse(file);
+    const contacts = loadContacts();
 
     res.render('index', {
         nama: 'Dionovan Ramadhani',
