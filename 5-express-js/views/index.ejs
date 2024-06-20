@@ -1,23 +1,5 @@
-<h1>Selamat Datang, <%= nama %></h1>
 <div class="container mt-5">
-    <h2>Daftar Contact</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Nama</th>
-                <th scope="col">No HP</th>
-            </tr>
-        </thead>
-        <tbody>
-                <% contacts.forEach((contact, key) => { %>
-                    <tr>
-                        <th scope="row"><%= key + 1 %></th>
-                        <td><%= contact.nama %></td>
-                        <td><%= contact.noHP %></td>
-                    </tr>
-                <% }) %>
-        </tbody>
-    </table>
+    <h1>Selamat Datang, <%= nama %></h1>
+    <p><%= msg %></p>
 </div>
 

@@ -1,0 +1,30 @@
+<div class="container p-3 my-5 w-50">
+    <h2>Form Edit Contact</h2>
+    <% if (typeof errors !== 'undefined') { %>
+        <div class="alert alert-danger">
+            <ul>
+                <% errors.forEach(error => { %>
+                    <li><%= error.msg %></li>
+                <% }) %>
+            </ul>
+        </div>
+    <% } %>
+    <form method="post" action="/contact/update/<%= contact.id %>">
+        <input type="text" class="form-control" id="id" name="id" required value="<%= contact.id %>" hidden>
+
+        <div class="mb-3 mt-3">
+            <label for="nama" class="form-label">Nama</label>
+            <input type="text" class="form-control" id="nama" placeholder="Masukkan nama contact" name="nama" value="<%= contact.nama %>" required>
+        </div>
+        <div class="mb-3 mt-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="text" class="form-control" id="email" placeholder="Masukkan email" name="email" value="<%= contact.email %>" required>
+        </div>
+        <div class="mb-3 mt-3">
+            <label for="noHP" class="form-label">No HP</label>
+            <input type="text" class="form-control" id="noHP" placeholder="Masukkan no HP" name="noHP" value="<%= contact.noHP %>">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>

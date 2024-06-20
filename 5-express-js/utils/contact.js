@@ -13,5 +13,53 @@ const loadContacts = () => {
     return contacts;
 }
 
-module.exports = {loadContacts}
+const saveContact = (newContact) => {
+    fs.writeFileSync(dataPath, JSON.stringify(newContact, null, 2));
+}
+
+const addContact = (newContact) => {
+    const contacts = loadContacts();
+    contacts.push(newContact);
+    saveContact(contacts);
+}
+
+const generateID = (id) => {
+    const contacts = loadContacts();
+    let idNew = parseInt(id);
+
+    contacts.forEach(contact => {
+        const contactID = parseInt(contact.id);
+        if (contactID === idNew)  idNew += 1;
+    });
+
+    return idNew;
+}
+
+const findContact = (id) => {
+    const contacts = loadContacts();
+    const targetContact = contacts.find(contact => contact.id === id);
+
+    return targetContact;
+}
+
+const deleteContact = (id) => {
+    const contacts = loadContacts();
+    const newContact = contacts.filter(contact => contact.id !== id);
+
+    saveContact(newContact);
+}
+
+const updateContact = (id, newContact) => {
+    const contacts = loadContacts();
+    contacts.map(contact => {
+        if (contact.id === id) {
+            contact.nama = newContact.nama;
+            contact.email = newContact.email;
+            contact.noHP = newContact.noHP;
+        }
+    })
+    saveContact(contacts);
+}
+
+module.exports = {loadContacts, addContact, generateID, findContact, deleteContact, updateContact}
 

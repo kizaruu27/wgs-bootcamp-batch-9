@@ -1,17 +1,38 @@
 [
-    {
-        "nama": "Ujang",
-        "noHP": "0851234566",
-        "email": "ujang@goo.com"
-    },
-    {
-        "nama": "Udin",
-        "noHP": "08513232236",
-        "email": "udin@goo.com"
-    },
-    {
-        "nama": "bambang",
-        "noHP": "08732322432",
-        "email": "bambang@goo.com"
-    }
+  {
+    "id": "2",
+    "nama": "Latipah",
+    "email": "latipah@yagoo.com",
+    "noHP": "085123456678"
+  },
+  {
+    "id": "3",
+    "nama": "Rusdi Amba",
+    "email": "rusdibaru@google.com",
+    "noHP": "083899999999"
+  },
+  {
+    "id": "6",
+    "nama": "Amba",
+    "email": "ambatron@google.com",
+    "noHP": "083811224455"
+  },
+  {
+    "id": "4",
+    "nama": "Syahla",
+    "email": "syahla123@google.com",
+    "noHP": "085166669999"
+  },
+  {
+    "id": "5",
+    "nama": "Haikal",
+    "email": "haikalganteng@456.com",
+    "noHP": "085133339999"
+  },
+  {
+    "id": "6",
+    "nama": "Karman",
+    "email": "karman@google.com",
+    "noHP": "081277889933"
+  }
 ]

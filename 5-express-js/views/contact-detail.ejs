@@ -1,0 +1,38 @@
+<div class="container p-3 my-5">
+    <div class="card w-50">
+        <div class="card-body">
+            <h4 class="card-title"><%= contact.nama %></h4>
+            <p class="card-text"><%= contact.email %></p>
+            <p class="card-text"><%= contact.noHP %></p>
+            <a href="/contact" class="card-link d-block mb-3">&laquo; Kembali ke halaman contact</a>
+            <button type="button" class="btn btn-danger badge" data-bs-toggle="modal" data-bs-target="#delete-modal">
+                delete
+            </button>
+            <a href="/contact/edit/<%= contact.id %>" class="btn btn-success badge">edit</a>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="delete-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+            <h4 class="modal-title">Confirmation</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+    
+            <!-- Modal body -->
+            <div class="modal-body">
+                Apakah anda yakin ingin menghapus contact ini?
+            </div>
+    
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <a href="/contact/delete/<%= contact.id %>" class="btn btn-primary">Ya</a>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tidak</button>
+            </div>
+    
+        </div>
+    </div>
+</div>
