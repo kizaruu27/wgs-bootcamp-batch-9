@@ -9,9 +9,7 @@
             </ul>
         </div>
     <% } %>
-    <form method="post" action="/contact/update/<%= contact.id %>">
-        <input type="text" class="form-control" id="id" name="id" required value="<%= contact.id %>" hidden>
-
+    <form method="post" action="/contact/update/<%= id %>">
         <div class="mb-3 mt-3">
             <label for="nama" class="form-label">Nama</label>
             <input type="text" class="form-control" id="nama" placeholder="Masukkan nama contact" name="nama" value="<%= contact.nama %>" required>
@@ -22,7 +20,7 @@
         </div>
         <div class="mb-3 mt-3">
             <label for="noHP" class="form-label">No HP</label>
-            <input type="text" class="form-control" id="noHP" placeholder="Masukkan no HP" name="noHP" value="<%= contact.noHP %>">
+            <input type="text" class="form-control" id="nohp" placeholder="Masukkan no HP" name="nohp" value="<%= contact.nohp %>">
         </div>
         
         <button type="submit" class="btn btn-primary">Submit</button>

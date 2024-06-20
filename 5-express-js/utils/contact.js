@@ -6,7 +6,12 @@ const path = './data';
 if (!fs.existsSync(path)) fs.mkdirSync(path);
 if (!fs.existsSync(dataPath)) fs.writeFileSync(dataPath, '[]', 'utf-8');
 
-const loadContacts = () => {
+const loadContacts = (contacts) => {
+    saveContact(contacts);
+    return contacts;
+}
+
+const loadLocalContacts = () => {
     const file = fs.readFileSync(dataPath, 'utf-8');
     const contacts = JSON.parse(file);
 
@@ -36,7 +41,7 @@ const generateID = (id) => {
 }
 
 const findContact = (id) => {
-    const contacts = loadContacts();
+    const contacts = loadLocalContacts();
     const targetContact = contacts.find(contact => contact.id === id);
 
     return targetContact;

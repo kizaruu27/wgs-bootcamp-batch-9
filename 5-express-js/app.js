@@ -1,10 +1,10 @@
 const express = require('express');
 const expressLayout = require('express-ejs-layouts');
-const validator = require('validator');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
 const {check, validationResult} = require('express-validator');
+const {pool} = require('./db');
 
 const { loadContacts, addContact, generateID, findContact, deleteContact, updateContact } = require('./utils/contact')
 const app = express();
@@ -23,6 +23,7 @@ app.use(session({
     saveUninitialized: true
 }));
 app.use(flash());
+app.use(express.json());
 
 // Halaman home
 app.get('/', (req, res) => {
@@ -43,24 +44,26 @@ app.get('/about', (req, res) => {
 });
 
 // Halaman contact
-app.get('/contact', (req, res) => {
-    const contacts = loadContacts();
-
-    res.render('contact', {
-        title: 'Contact List',
-        contacts,
-        msg: req.flash('msg'),
-        layout: 'layouts/main-layouts'
-    });
+app.get('/contact', async (req, res) => {
+    try {
+        const fetchContacts = await pool.query('SELECT * FROM contacts ORDER BY id');
+        const contacts = loadContacts(fetchContacts.rows);
+        // res.json(fetchContacts.rows);
+    
+        res.render('contact', {
+            title: 'Contact List',
+            contacts,
+            msg: req.flash('msg'),
+            layout: 'layouts/main-layouts'
+        });
+    } catch (error) {
+        console.log(error.message);
+    }
 });
 
 // Halaman tambah contact
 app.get('/contact/add', (req, res) => {
-    const contacts = loadContacts();
-    const id = generateID(contacts.length);
-
     res.render('contact-add', {
-        id,
         title: 'Form Tambah Contact',
         layout: 'layouts/main-layouts'
     })
@@ -70,53 +73,98 @@ app.get('/contact/add', (req, res) => {
 app.post('/contact', 
     [
         check('email', 'Email tidak  valid!').isEmail(),
-        check('noHP', 'No HP tidak valid!').isMobilePhone('id-ID')
+        check('nohp', 'No HP tidak valid!').isMobilePhone('id-ID')
     ],
-    (req, res) => {
-    const contacts = loadContacts();
-    const id = generateID(contacts.length);
+    
+    async (req, res) => {
+        try {
+            const errors = validationResult(req);
 
-    const newContact = req.body;
-    const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                res.render('contact-add', {
+                    title: 'Form Tambah Contact',
+                    errors: errors.array(),
+                    layout: 'layouts/main-layouts'
+                })
+            } else {
+                // addContact(newContact);
+                const {nama, email, nohp} = req.body;
+                const fetchContact = await pool.query(
+                    `
+                        INSERT INTO contacts (nama, email, nohp) 
+                        VALUES ($1, $2, $3) RETURNING *
+                    `,
+                    [nama, email, nohp]
+                );
 
-    if (!errors.isEmpty()) {
-        res.render('contact-add', {
-            id,
-            title: 'Form Tambah Contact',
-            errors: errors.array(),
-            layout: 'layouts/main-layouts'
-        })
-    } else {
-        addContact(newContact);
-        req.flash('msg', `${newContact.nama} telah ditambahkan!`);
-        res.redirect('/contact');
-    }
+                // res.json(fetchContact.rows[0]);
+                req.flash('msg', `${nama} telah ditambahkan!`);
+                res.redirect('/contact');
+            }
+
+            
+            // const contacts = loadContacts();
+            // const id = generateID(contacts.length);
+        
+            // const newContact = req.body;
+        
+        } catch (error) {
+            console.log(error.message);
+        }
 });
 
 // Halaman detail
-app.get('/contact/detail/:id', (req, res) => {
-    const contact = findContact(req.params.id);
+app.get('/contact/detail/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const fetchContacts = await pool.query(
+            'SELECT * FROM contacts WHERE id = $1',
+            [id]
+        );
+        const contact = fetchContacts.rows[0];
 
-    res.render('contact-detail', {
-        title: 'Contact Detail',
-        contact,
-        layout: 'layouts/main-layouts'
-    })
+        res.render('contact-detail', {
+            title: 'Contact Detail',
+            contact,
+            layout: 'layouts/main-layouts'
+        })
+    } catch (error) {
+        console.log(error.message);
+    }
+
 });
 
 // Delete contact
-app.get('/contact/delete/:id', (req, res) => {
-    const deletedContact = findContact(req.params.id);
-    deleteContact(req.params.id);
-    req.flash('msg', `${deletedContact.nama} berhasil  dihapus!`);
-    res.redirect('/contact');
+app.get('/contact/delete/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const fetchContact = await pool.query('SELECT * FROM contacts WHERE id = $1', [id]);
+        const contact = fetchContact.rows[0];
+
+        const deleteContact = await pool.query(
+            `
+                DELETE FROM contacts
+                WHERE id = $1
+            `,
+            [id]
+        );
+
+        // res.json(`${contact.nama} Berhasil dihapus`);
+        req.flash('msg', `${contact.nama === null ? '' : contact.nama} Berhasil dihapus`);
+        res.redirect('/contact');
+    } catch (error) {
+        console.log(error.message);
+    }
 });
 
 // Edit contact
-app.get('/contact/edit/:id', (req, res) => {
-    const contact = findContact(req.params.id);
+app.get('/contact/edit/:id', async (req, res) => {
+    const {id} = req.params;
+    const fetchContact = await pool.query('SELECT * FROM contacts WHERE id = $1', [id]);
+    const contact = fetchContact.rows[0];
 
     res.render('contact-edit', {
+        id,
         title: 'Form Edit Contact',
         contact,
         layout: 'layouts/main-layouts'
@@ -127,26 +175,40 @@ app.get('/contact/edit/:id', (req, res) => {
 app.post('/contact/update/:id', 
     [
         check('email', 'Email tidak  valid!').isEmail(),
-        check('noHP', 'No HP tidak valid!').isMobilePhone('id-ID')
+        check('nohp', 'No HP tidak valid!').isMobilePhone('id-ID')
     ],
-    (req, res) => {
-    const id = req.params.id;
-    const newContact =  req.body;
-    const errors = validationResult(req);
+    async (req, res) => {
+        try {
+            const {id} = req.params;
+            const {nama, email, nohp} = req.body;
+            const newContact =  req.body;
+            const errors = validationResult(req);
+    
+            if (!errors.isEmpty()) {
+                res.render('contact-edit', {
+                    title: 'Form Edit Contact',
+                    id,
+                    errors: errors.array(),
+                    contact: newContact,
+                    layout: 'layouts/main-layouts'
+                })
+            } else {
+                const updateContact = await pool.query(
+                    `
+                        UPDATE contacts
+                        SET nama = $1, email = $2, nohp = $3
+                        WHERE id = $4
+                    `,
+                    [nama, email, nohp, id]
+                )
+                req.flash('msg', 'Data berhasil diubah!');
+                res.redirect('/contact');
+                res.json(updateContact);
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
 
-    if (!errors.isEmpty()) {
-        res.render('contact-edit', {
-            id,
-            title: 'Form Edit Contact',
-            errors: errors.array(),
-            contact: newContact,
-            layout: 'layouts/main-layouts'
-        })
-    } else {
-        updateContact(id, newContact);
-        req.flash('msg', 'Data berhasil diubah!');
-        res.redirect('/contact');
-    }
 });
 
 app.get('/products/:id', (req, res) => {
@@ -163,49 +225,4 @@ app.use('/', (req, res) => {
 
 app.listen(port, () => {
     console.log(`Server is listening to port http://localhost:${port}`);
-})
-
-
-
-
-
-// const http = require('http');
-// const fs = require('fs');
-// const port = 3000;
-
-// http
-//     .createServer((req, res) => {
-//         const url = req.url;
-//         console.log(url);
-
-//         res.writeHead(200, {
-//             'Content-Type' : 'text/html'
-//         });
-
-//         switch (url) {
-//             case '/about':
-//                 renderFile(res, './about.html');
-//                 break;
-//             case '/contact': 
-//                 renderFile(res, './contact.html');
-//                 break;
-//             default:
-//                 renderFile(res, './index.html');
-//                 break;
-//         }
-//     })
-//     .listen(port, () => {
-//         console.log(`Server is listening to port http://localhost:${port}`);
-//     });
-
-// const renderFile = (res, dir) => {
-//     fs.readFile(dir, (error, data) => {
-//         if (error) {
-//             res.writeHead(404);
-//             res.write('Error: Page Not Found');
-//         } else {
-//             res.write(data);
-//         }
-//         res.end();
-//     });
-// }
+});

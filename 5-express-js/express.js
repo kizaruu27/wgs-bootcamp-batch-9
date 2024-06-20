@@ -1,46 +1,33 @@
 const express = require('express');
-const expressLayout = require('express-ejs-layouts');
-const { loadContacts } = require('./utils/contact')
 const app = express();
-const port = 3000;
+const {pool} = require('./db');
+const PORT = 3000;
 
-app.set('view engine', 'ejs');
-app.use(expressLayout);
+app.use(express.json());
 
-app.get('/', (req, res) => {
-    const contacts = loadContacts();
+app.post('/add', async (req, res) => {
+    try {
+        const {nama, email, noHP} = req.body;
 
-    res.render('index', {
-        nama: 'Dionovan Ramadhani',
-        contacts,
-        layout: 'layouts/main-layouts'
-    });
+        const newData = await pool.query(
+            'INSERT INTO contacts (nama, email, noHP) VALUES ($1, $2, $3) RETURNING *',
+            [nama, email, noHP]
+        )
+        res.json(newData.rows);
+    } catch (error) {
+        console.log(error.message);
+    }
 });
 
-app.get('/about', (req, res) => {
-    res.render('about', {
-        layout: 'layouts/main-layouts'
-    });
-});
+app.get('/list', async (req, res) => {
+    try {
+        const contacts = await pool.query('SELECT * FROM contacts');
+        res.json(contacts.rows);
+    } catch (error) {
+        console.log(error.message);
+    }
+})
 
-app.get('/contact', (req, res) => {
-    res.render('contact', {
-        layout: 'layouts/main-layouts'
-    });
-});
-
-app.get('/products/:id', (req, res) => {
-    const id = req.params.id;
-    const category = req.query.category;
-
-    res.send(`Product id: ${id} <br> Category id: ${category}`);
-});
-
-app.use('/', (req, res) => {
-    res.status(404);
-    res.send('Page not found: 404');
-});
-
-app.listen(port, () => {
-    console.log(`Server is listening to port http://localhost:${port}`);
+app.listen(PORT, () => {
+    console.log(`Listening to http://localhost:${PORT}`);
 })
