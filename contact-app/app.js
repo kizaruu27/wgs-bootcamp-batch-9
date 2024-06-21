@@ -4,6 +4,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
 const {check, validationResult} = require('express-validator');
+const cors = require('cors');
 
 const { loadContacts, queryProcess } = require('./utils/contact')
 const app = express();
@@ -22,6 +23,7 @@ app.use(session({
     saveUninitialized: true
 }));
 app.use(flash());
+app.use(cors());
 app.use(express.json());
 
 // Halaman home
