@@ -1,4 +1,5 @@
 const fs = require('fs');
+const {pool} = require('../db');
 
 const dataPath = './data/data.json';
 const path = './data';
@@ -66,5 +67,11 @@ const updateContact = (id, newContact) => {
     saveContact(contacts);
 }
 
-module.exports = {loadContacts, addContact, generateID, findContact, deleteContact, updateContact}
+// Query Process
+const queryProcess = async (query, data) => {
+    const fetchContacts = await pool.query(query, data);
+    return fetchContacts;
+}
+
+module.exports = {loadContacts, addContact, generateID, findContact, deleteContact, updateContact, queryProcess}
 

@@ -4,9 +4,8 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
 const {check, validationResult} = require('express-validator');
-const {pool} = require('./db');
 
-const { loadContacts, addContact, generateID, findContact, deleteContact, updateContact } = require('./utils/contact')
+const { loadContacts, queryProcess } = require('./utils/contact')
 const app = express();
 const port = 3000;
 
@@ -46,8 +45,8 @@ app.get('/about', (req, res) => {
 // Halaman contact
 app.get('/contact', async (req, res) => {
     try {
-        const fetchContacts = await pool.query('SELECT * FROM contacts ORDER BY id');
-        const contacts = loadContacts(fetchContacts.rows);
+        const response = await queryProcess('SELECT * FROM contacts ORDER BY id');
+        const contacts = loadContacts(response.rows);
         // res.json(fetchContacts.rows);
     
         res.render('contact', {
@@ -87,9 +86,8 @@ app.post('/contact',
                     layout: 'layouts/main-layouts'
                 })
             } else {
-                // addContact(newContact);
                 const {nama, email, nohp} = req.body;
-                const fetchContact = await pool.query(
+                await queryProcess(
                     `
                         INSERT INTO contacts (nama, email, nohp) 
                         VALUES ($1, $2, $3) RETURNING *
@@ -100,14 +98,7 @@ app.post('/contact',
                 // res.json(fetchContact.rows[0]);
                 req.flash('msg', `${nama} telah ditambahkan!`);
                 res.redirect('/contact');
-            }
-
-            
-            // const contacts = loadContacts();
-            // const id = generateID(contacts.length);
-        
-            // const newContact = req.body;
-        
+            }        
         } catch (error) {
             console.log(error.message);
         }
@@ -117,11 +108,7 @@ app.post('/contact',
 app.get('/contact/detail/:id', async (req, res) => {
     try {
         const {id} = req.params;
-        const fetchContacts = await pool.query(
-            'SELECT * FROM contacts WHERE id = $1',
-            [id]
-        );
-        const contact = fetchContacts.rows[0];
+        const contact = (await queryProcess('SELECT * FROM contacts WHERE id = $1', [id])).rows[0];
 
         res.render('contact-detail', {
             title: 'Contact Detail',
@@ -138,18 +125,17 @@ app.get('/contact/detail/:id', async (req, res) => {
 app.get('/contact/delete/:id', async (req, res) => {
     try {
         const {id} = req.params;
-        const fetchContact = await pool.query('SELECT * FROM contacts WHERE id = $1', [id]);
+        const fetchContact = await queryProcess('SELECT * FROM contacts WHERE id = $1', [id]);
         const contact = fetchContact.rows[0];
 
-        const deleteContact = await pool.query(
+        await queryProcess(
             `
                 DELETE FROM contacts
                 WHERE id = $1
             `,
             [id]
-        );
+        )
 
-        // res.json(`${contact.nama} Berhasil dihapus`);
         req.flash('msg', `${contact.nama === null ? '' : contact.nama} Berhasil dihapus`);
         res.redirect('/contact');
     } catch (error) {
@@ -160,8 +146,7 @@ app.get('/contact/delete/:id', async (req, res) => {
 // Edit contact
 app.get('/contact/edit/:id', async (req, res) => {
     const {id} = req.params;
-    const fetchContact = await pool.query('SELECT * FROM contacts WHERE id = $1', [id]);
-    const contact = fetchContact.rows[0];
+    const contact = (await queryProcess('SELECT * FROM contacts WHERE id = $1', [id])).rows[0];
 
     res.render('contact-edit', {
         id,
@@ -193,7 +178,7 @@ app.post('/contact/update/:id',
                     layout: 'layouts/main-layouts'
                 })
             } else {
-                const updateContact = await pool.query(
+                await queryProcess(
                     `
                         UPDATE contacts
                         SET nama = $1, email = $2, nohp = $3
@@ -203,7 +188,7 @@ app.post('/contact/update/:id',
                 )
                 req.flash('msg', 'Data berhasil diubah!');
                 res.redirect('/contact');
-                res.json(updateContact);
+                // res.json(updateContact);
             }
         } catch (error) {
             console.log(error.message);
@@ -220,7 +205,10 @@ app.get('/products/:id', (req, res) => {
 
 app.use('/', (req, res) => {
     res.status(404);
-    res.send('Page not found: 404');
+    res.render('not-found', {
+        title: 'Page Not Found 😒',
+        layout: 'layouts/main-layouts'
+    });
 });
 
 app.listen(port, () => {
