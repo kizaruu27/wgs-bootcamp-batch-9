@@ -35,9 +35,11 @@ export default class App extends Component {
       <>
         <Nav />
         <Content />
-        {this.state.map((comment, key) => 
-          <Comment nama={comment.nama} comment={comment.message} date={comment.date} img={comment.avatar} key={key}/>
-        )}
+        <div className='comment-section'>
+          {this.state.map((comment, key) => 
+            <Comment nama={comment.nama} comment={comment.message} date={comment.date} img={comment.avatar} key={key}/>
+          )}
+        </div>
       </>
     )
   }
