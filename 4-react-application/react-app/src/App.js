@@ -1,6 +1,7 @@
 import Nav from './components/nav';
 import Content from './components/content';
 import Comment from './components/comment';
+import Form from './components/form';
 import { faker } from '@faker-js/faker';
 import { Component } from 'react';
 import './App.css';
@@ -43,6 +44,7 @@ export default class App extends Component {
             <Comment nama={comment.nama} comment={comment.message} date={comment.date} img={comment.avatar} likes={comment.likes} key={key}/>
           )}
         </div>
+        <Form />
       </>
     )
   }

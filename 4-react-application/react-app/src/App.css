@@ -46,3 +46,12 @@
 .content, .comments {
   margin: 0 50px;
 }
+
+.input-form {
+  width: 50%;
+  margin: 0 auto;
+}
+
+/* .button-submit {
+  margin: 0 auto;
+} */
