@@ -2,6 +2,7 @@ import Nav from './components/nav';
 import Content from './components/content';
 import Comment from './components/comment';
 import Form from './components/form';
+import ImageSearch from './components/imageSearch';
 import { faker } from '@faker-js/faker';
 import { Component } from 'react';
 import './App.css';
@@ -45,6 +46,7 @@ export default class App extends Component {
           )}
         </div>
         <Form />
+        <ImageSearch />
       </>
     )
   }
