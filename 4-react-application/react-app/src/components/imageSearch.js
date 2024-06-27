@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ImageList, ImageListItem } from '@mui/material';
 import { Component } from 'react';
 
 export default class ImageSearch extends Component {
@@ -40,13 +41,16 @@ export default class ImageSearch extends Component {
                     <span class="input-group-text btn btn-success" id="addon-wrapping">Search</span>
                     <input type="text" class="form-control" aria-describedby="addon-wrapping" onChange={e => this.fetchImg(e)} />
                 </div>
-                <div className='container d-flex flex-wrap gap-3 mt-5 justify-content-center'>
-                    {images.map((img, key) => {
-                        return(
-                            <img key={key} src={img.urls.small} alt='Gambar'/>
+
+                <ImageList variant="masonry" cols={3} gap={8} className='mt-3'>
+                    {images.map((img, key) => 
+                        (
+                            <ImageListItem key={img.urls.small}>
+                                <img key={key} srcSet={img.urls.small} src={img.urls.small} alt='Gambar'/>
+                            </ImageListItem>
                         )
-                    })}
-                </div>
+                    )}
+                </ImageList>
             </div>
         )
     }

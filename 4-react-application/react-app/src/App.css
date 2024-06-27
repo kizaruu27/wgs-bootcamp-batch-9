@@ -52,6 +52,10 @@
   margin: 0 auto;
 }
 
+.video-item:hover {
+  cursor: pointer;
+}
+
 /* .button-submit {
   margin: 0 auto;
 } */
