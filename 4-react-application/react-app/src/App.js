@@ -4,6 +4,10 @@ import Comment from './components/comment';
 import Form from './components/form';
 import ImageSearch from './components/imageSearch';
 import YoutubePlayer from './components/youtubePlayer';
+import HooksClock from './components/HooksClock';
+import HomePage from './pages/homePage';
+import AboutPage from './pages/aboutPage';
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import { faker } from '@faker-js/faker';
 import { Component } from 'react';
 import './App.css';
@@ -40,6 +44,14 @@ export default class App extends Component {
     return(
       <>
         <Nav />
+        <Router>
+          <Routes>
+            <Route path='/' />
+            <Route path='home' Component={HomePage}/>
+            <Route path='about' Component={AboutPage}/>
+          </Routes>
+        </Router>
+
         <Content />
         <div className='comment-section'>
           {this.state.map((comment, key) => 
@@ -49,6 +61,7 @@ export default class App extends Component {
         <Form />
         <ImageSearch />
         <YoutubePlayer />
+        <HooksClock />
       </>
     )
   }

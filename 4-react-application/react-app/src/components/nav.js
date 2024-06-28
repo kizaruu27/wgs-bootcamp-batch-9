@@ -8,9 +8,9 @@ export default function Nav() {
                     <h1 className="h3">React Title</h1>
                 </div>
                 <div className='nav'>
-                    <a>Home</a>
-                    <a>About</a>
-                    <a>Contact</a>
+                    <a href="/">Home</a>
+                    <a href="/about">About</a>
+                    <a href="/redux-page">React Redux</a>
                 </div>
             </div>
         </>
