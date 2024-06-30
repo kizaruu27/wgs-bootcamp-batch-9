@@ -1,11 +1,11 @@
 export const url = 'https://youtube.googleapis.com/youtube/v3/search';
 const APIKEY = 'AIzaSyDkY6B-zMhROLOfzMvBWakLbtTXyaLfAok';
-export const config = (value) => (
+export const config = (searchKey) => (
     {
         params : {
             part: 'snippet',
             maxResults: 5,
-            q: value,
+            q: searchKey,
             key: APIKEY
         }
     }

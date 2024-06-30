@@ -1,14 +1,17 @@
 import { fetchYoutubeVideo } from "../features/Videos/youtubeVideos.js";
 import {useDispatch, useSelector} from 'react-redux';
-import {setSearch, setVideos} from "../features/YoutubeSlice/youtubeSlice.js";
+import {setSearch, setVideos, setIsSelected} from "../features/YoutubeSlice/youtubeSlice.js";
 
 export default function SearchBar() {
     const searchKey = useSelector(state => state.youtube.searchKey);
     const dispatch = useDispatch();
 
     const setVideoList = async (searchKey) => {
+        if (searchKey === '') return false;
+
         const response = await fetchYoutubeVideo(searchKey);
         dispatch(setVideos(response));
+        dispatch(setIsSelected(false));
     }
     
     return(

@@ -4,7 +4,9 @@ export const youtubeSlice = createSlice({
     name: 'youtube',
     initialState: {
         videos: [],
-        searchKey: ''
+        selectedVideo: [],
+        searchKey: '',
+        isSelected: false
     },
     reducers: {
         setVideos: (state, action) => {
@@ -13,9 +15,16 @@ export const youtubeSlice = createSlice({
         },
         setSearch: (state, action) => {
             state.searchKey = action.payload;
+        },
+        setSelectedVides: (state, action) => {
+            state.selectedVideo = action.payload;
+            console.dir(state.selectedVideo);
+        },
+        setIsSelected: (state, action) => {
+            state.isSelected = action.payload;
         }
     }
 })
 
-export const {setVideos, setSearch} = youtubeSlice.actions;
+export const {setVideos, setSearch, setSelectedVides, setIsSelected} = youtubeSlice.actions;
 export default youtubeSlice.reducer;
