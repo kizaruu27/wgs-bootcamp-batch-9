@@ -23,7 +23,7 @@ export default function VideoView() {
             <div className="video-list">
                 {
                     allVideos.map((video, key) => (
-                        <a href="#" key={key} className='video-item' onClick={() => assignSelectedVideos(video) }>
+                        <div key={key} className='video-item' onClick={() => assignSelectedVideos(video) }>
                             <div className="thumbnail">
                                 <img src={video.snippet.thumbnails.default.url} alt="" srcset="" />
                             </div>
@@ -32,7 +32,7 @@ export default function VideoView() {
                                 <p>{video.snippet.channelTitle} |  {new Date(video.snippet.publishTime.toString()).toLocaleDateString()}</p>
                                 <p>{video.snippet.description}</p>
                             </div>
-                        </a>
+                        </div>
                     ))
                 }
             </div>

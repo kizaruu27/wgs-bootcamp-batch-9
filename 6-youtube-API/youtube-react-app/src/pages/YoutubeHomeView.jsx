@@ -1,18 +1,19 @@
 import SearchBar from "../components/SearchBar";
 import VideoList from "../components/VideoList";
 import VideoView from "../components/VideoView";
-import { useSelector } from "react-redux";
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
 export default function YoutubeHomeView() {
-    const isSelected = useSelector(state => state.youtube.isSelected);
 
     return (
         <>
-            <div className="container w-50 text-center mt-3">
-                <SearchBar />
-            </div>
-            {isSelected ? <VideoView /> : <VideoList/>}
-            
+        <Router>
+            <SearchBar />
+            <Routes>
+                <Route exact path="/list" Component={VideoList}/>
+                <Route exact path="/view" Component={VideoView}/>
+            </Routes>
+        </Router>
         </>
     )
 }
