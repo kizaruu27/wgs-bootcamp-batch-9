@@ -3,7 +3,6 @@ import Content from './components/content';
 import Comment from './components/comment';
 import Form from './components/form';
 import ImageSearch from './components/imageSearch';
-import YoutubePlayer from './components/youtubePlayer';
 import HooksClock from './components/HooksClock';
 import HomePage from './pages/homePage';
 import AboutPage from './pages/aboutPage';
@@ -60,7 +59,6 @@ export default class App extends Component {
         </div>
         <Form />
         <ImageSearch />
-        <YoutubePlayer />
         <HooksClock />
       </>
     )
