@@ -10,3 +10,5 @@ export const config = (searchKey) => (
         }
     }
 )
+
+export const src = (id => `https://www.youtube.com/embed/${id}?si=YKoiDkzjjL7XUlDz`);
