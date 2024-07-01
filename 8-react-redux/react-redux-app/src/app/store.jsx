@@ -6,5 +6,5 @@ export default configureStore({
     reducer: {
         counter: counterReducer,
         customer: customerReducer
-    }
+    },
 })
