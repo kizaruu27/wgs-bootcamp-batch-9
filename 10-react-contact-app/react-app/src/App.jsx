@@ -19,8 +19,8 @@ export default function App() {
                 <Route path="/about" Component={AboutPage}/>
                 <Route path="/contact" Component={ContactPage}/>
                 <Route path="/contact/add" Component={AddContactForm}/>
-                <Route path={`/contact/update/${contactID}`} element={<EditContactForm id={contactID}/>}/>
-                <Route path={`/contact/detail/${contactID}`} Component={ContactPageDetail}/>
+                <Route path={`/contact/update/:id`} element={<EditContactForm id={contactID}/>}/>
+                <Route path={`/contact/detail/:id`} Component={ContactPageDetail}/>
             </Routes>
         </Router>
     )

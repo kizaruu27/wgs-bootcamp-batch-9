@@ -4,14 +4,15 @@ import Modal from "../fragments/Modal";
 import ModalBody from "../elements/ModalBody";
 import { setContactDetail } from "../../backend/contactHandler";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 export default function ContactPageDetail() {
     const [contact, setContact] = useState({});
-    const contactID = useSelector(state => state.contact.id);
+    const { id } = useParams();
 
     useEffect(() => {
-        setContactDetail(setContact, contactID);
+        console.log('Params', id);
+        setContactDetail(setContact, id);
     }, [0])
 
     return(

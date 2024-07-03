@@ -1,11 +1,6 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Card({id, nama, email, noHP}) {
-    const navigate = useNavigate();
-
-    const navigateToEditForm = (id) => {
-        navigate(`/contact/update/${id}`);
-    }
 
     return(
         <div className="card w-50">
@@ -17,7 +12,9 @@ export default function Card({id, nama, email, noHP}) {
                 <button type="button" className="btn btn-danger badge" data-bs-toggle="modal" data-bs-target="#delete-modal">
                     delete
                 </button>
-                <button onClick={() => navigateToEditForm(id)} className="btn btn-success badge" >edit</button>
+                <Link to={`/contact/update/${id}`}>
+                    <button className="btn btn-success badge" >edit</button>
+                </Link>
             </div>
         </div>
     )

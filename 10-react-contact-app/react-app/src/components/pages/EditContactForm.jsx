@@ -4,12 +4,14 @@ import Form from "../elements/Form";
 import { editContact } from "../../backend/contactHandler";
 import { setContactDetail } from "../../backend/contactHandler";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
-export default function EditContactForm({id}) {
+export default function EditContactForm() {
     const [nama, setNama] = useState('');
     const [email, setEmail] = useState('');
     const [nohp, setNoHP] = useState('');
     const [contact, setContact] = useState([]);
+    const { id } = useParams();
 
     useEffect(() => {
         setContactDetail(setContact, id);
